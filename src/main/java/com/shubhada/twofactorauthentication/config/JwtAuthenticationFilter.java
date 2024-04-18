@@ -1,5 +1,6 @@
 package com.shubhada.twofactorauthentication.config;
 
+import com.shubhada.twofactorauthentication.token.TokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+    private final TokenRepository tokenRepository;
 
 
     @Override
@@ -51,7 +53,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             //authentication is null i.e user is not yet authenticate
             //get data from database
             UserDetails userDetails=this.userDetailsService.loadUserByUsername(userEmail);
-            if(jwtService.isTokenValid(jwt,userDetails))
+            var isTokenValid=tokenRepository.findByToken(jwt)
+                    .map(t-> !t.isExpired() && !t.isRevoked())
+                    .orElse(false);//need to got to Db and check valid token
+            if(jwtService.isTokenValid(jwt,userDetails) && isTokenValid)
             {
                 //token is valid update security context holder
 

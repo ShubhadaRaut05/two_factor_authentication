@@ -1,5 +1,6 @@
 package com.shubhada.twofactorauthentication.models;
 
+import com.shubhada.twofactorauthentication.token.Token;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,13 +21,17 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Integer id;
     private String firstName;
     private String lastName;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens;
+
 
 
 
