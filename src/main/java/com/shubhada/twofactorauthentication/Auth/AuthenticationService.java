@@ -34,7 +34,7 @@ private final AuthenticationManager authenticationManager;
         //after generating token we need to persist token into db
         saveUserToken(savedUser, jwtToken);
         return AuthenticationResponse.builder()
-                .token(jwtToken)
+                .accessToken(jwtToken)
                 .build();
     }
 
