@@ -15,9 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -112,9 +110,9 @@ private final AuthenticationManager authenticationManager;
         //extract user email from jwt
         userEmail=jwtService.extractUsername(refreshToken);
 
-        if(userEmail!=null && SecurityContextHolder.getContext().getAuthentication()==null)
+        if(userEmail!=null )
         {
-            //authentication is null i.e user is not yet authenticate
+            //authentication is null  user is not yet authenticate
             //get data from database
            var user=this.repository.findByEmail(userEmail)
                    .orElseThrow();
@@ -128,7 +126,7 @@ private final AuthenticationManager authenticationManager;
                        .accessToken(accessToken)
                        .refreshToken(refreshToken)
                        .build();
-               new ObjectMapper().writeValue(response.getOutputStream(),authResponse);
+                new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
 
