@@ -34,11 +34,12 @@ private final AuthenticationManager authenticationManager;
 private final TwoFactorAuthenticationService tfaService;
     public AuthenticationResponse register(RegisterRequest request) {
         var user= User.builder()
-                .firstName(request.getFirstName())
-                .lastName(request.getLastName())
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+               // .role(request.getRole())
+                .role(Role.ADMIN)
                 .mfaEnabled(request.isMfaEnabled())
                 .build();
         //if mfaEnabled ---> generate a secret
